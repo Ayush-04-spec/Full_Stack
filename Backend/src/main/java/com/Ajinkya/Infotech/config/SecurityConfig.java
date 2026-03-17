@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) //  THIS WAS MISSING
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/requestOtp").permitAll()
+                        .requestMatchers("/user/login", "/user/register", "/user/requestOtp").permitAll()
                         .requestMatchers(HttpMethod.GET, "/blogs", "/blogs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/courses", "/api/courses/**").permitAll()
                         .anyRequest().authenticated()

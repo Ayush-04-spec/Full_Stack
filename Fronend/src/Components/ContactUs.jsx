@@ -40,21 +40,7 @@ export default function ContactUs() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap justify-center gap-5">
               <a
-                href="tel:+919999999999"
-                className="
-                  px-8 py-4 rounded-full
-                  bg-gradient-to-r from-orange-500 to-orange-600
-                  text-white font-semibold
-                  shadow-lg shadow-orange-500/40
-                  hover:scale-105
-                  transition-transform
-                "
-              >
-                📞 Call Now
-              </a>
-
-              <a
-                href="https://wa.me/919999999999"
+                href="https://wa.me/918275224127"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
@@ -69,22 +55,6 @@ export default function ContactUs() {
                 "
               >
                 💬 WhatsApp
-              </a>
-
-              <a
-                href="mailto:info@ajinkyainfotech.com"
-                className="
-                  px-8 py-4 rounded-full
-                  bg-white/80
-                  text-orange-600 font-semibold
-                  backdrop-blur
-                  border border-white/40
-                  shadow-md
-                  hover:scale-105
-                  transition-transform
-                "
-              >
-                ✉️ Email Us
               </a>
             </div>
           </div>

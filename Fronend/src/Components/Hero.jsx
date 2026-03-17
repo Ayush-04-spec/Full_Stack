@@ -2,20 +2,20 @@ import React, { useState, useEffect } from "react";
 
 const slides = [
   {
-    title: "Write. Share. Inspire.",
-    desc: "Publish your thoughts and reach readers worldwide.",
+    title: "Learn to Code. Build Your Future.",
+    desc: "Hands-on programming courses designed for beginners and job seekers.",
     image:
       "https://lh3.googleusercontent.com/p/AF1QipN5qFrr1A5hItfNc3Wqs7G0k2TQC7C4ztxfD6sq=s1360-w1360-h1020-rw",
   },
   {
-    title: "Tech, Stories & Ideas",
-    desc: "A platform built for developers and creators.",
+    title: "From Zero to Developer",
+    desc: "Master C, OOP, Python and more with expert guidance at Ajinkya Infotech.",
     image:
       "https://lh3.googleusercontent.com/p/AF1QipMguVdU0JhQYHgLXu_r1tIv5pHRPeF5Kj8y6DJO=s1360-w1360-h1020-rw",
   },
   {
-    title: "Your Voice Matters",
-    desc: "Start blogging today and grow your audience.",
+    title: "Real Skills. Real Projects.",
+    desc: "Every course includes practical assignments and real-world coding experience.",
     image:
       "https://lh3.googleusercontent.com/p/AF1QipOpPLbrPC3ZVnJbwcFF9ceO1T6Kfigt8vhz6_xf=s1360-w1360-h1020-rw",
   },

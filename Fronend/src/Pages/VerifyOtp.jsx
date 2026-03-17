@@ -29,7 +29,7 @@ const VerifyOtp = () => {
   const otpData = { otp, email };
 
   await axios.post(
-    "http://localhost:8082/register",
+    "http://localhost:8082/user/register",
     otpData
   );
 

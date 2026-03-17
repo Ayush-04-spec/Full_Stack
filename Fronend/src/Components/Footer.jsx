@@ -1,4 +1,4 @@
-import { FaPhoneAlt, FaEnvelope, FaGlobe, FaMapMarkerAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -31,17 +31,7 @@ const Footer = () => {
           <div className="space-y-4 text-sm">
             <p className="flex items-center gap-3 text-orange-100 hover:text-white transition">
               <FaPhoneAlt className="text-orange-200" />
-              <span>+91 98765 43210</span>
-            </p>
-
-            <p className="flex items-center gap-3 text-orange-100 hover:text-white transition">
-              <FaEnvelope className="text-orange-200" />
-              <span>contact@ajinkyainfotech.com</span>
-            </p>
-
-            <p className="flex items-center gap-3 text-orange-100 hover:text-white transition">
-              <FaGlobe className="text-orange-200" />
-              <span>www.ajinkyainfotech.com</span>
+              <span>+91 82752 24127</span>
             </p>
           </div>
         </div>

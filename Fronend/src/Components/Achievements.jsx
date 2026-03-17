@@ -4,23 +4,23 @@ import { motion } from "framer-motion";
 /* ---------- DATA (JSON) ---------- */
 const achievementsData = [
   {
-    subject: "Industry-Oriented Training",
+    subject: "Practical, Hands-On Learning",
     content:
-      "Our courses are designed to meet real-world industry requirements, helping students gain hands-on experience and job-ready skills.",
+      "We believe in learning by doing. Every module includes real coding exercises, mini projects, and assignments that mirror actual workplace tasks — not just theory.",
     image:
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
   },
   {
-    subject: "Experienced Trainers",
+    subject: "Small Batches, Personal Attention",
     content:
-      "Learn from highly experienced trainers who bring deep industry knowledge and mentorship into every session.",
+      "We keep our batch sizes small intentionally. Every student gets direct access to the trainer, personalized feedback, and the time they need to truly understand the material.",
     image:
       "https://images.unsplash.com/photo-1552664730-d307ca884978"
   },
   {
-    subject: "Student Success Stories",
+    subject: "Career-Focused Curriculum",
     content:
-      "Hundreds of students have successfully started their IT careers through our structured training and placement guidance.",
+      "Our courses are built around what employers actually look for. From C and OOP fundamentals to Python and web development, every topic is chosen to make you job-ready from day one.",
     image:
       "https://images.unsplash.com/photo-1524178232363-1fb2b075b655"
   }
@@ -61,7 +61,7 @@ export default function Achievements() {
         className="text-center mb-16"
       >
         <h2 className="text-4xl font-bold text-orange-600">
-          Our Achievements
+          What Makes Us Stand Out
         </h2>
         <div className="w-24 h-1 bg-orange-500 mx-auto mt-4 rounded-full" />
       </motion.div>

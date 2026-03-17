@@ -9,7 +9,11 @@ import VerifyOtp from "./Pages/VerifyOtp";
 import Blogs from "./Pages/Blogs";
 import BlogDetails from "./Pages/BlogDetailsPage";
 import Courses from "./Pages/Courses";
+import CourseDetail from "./Pages/CourseDetail";
+import Profile from "./Pages/Profile";
 
+
+import Chatbot from "./Components/Chatbot";
 
 function App() {
   
@@ -37,12 +41,15 @@ function App() {
                 <Route path = "/blogs" element={<Blogs/>}/>
                 <Route path="/blogs/:slug" element={<BlogDetails />} />
                 <Route path="/courses" element={<Courses/>}/>
+                <Route path="/courses/:id" element={<CourseDetail/>}/>
+                <Route path="/profile" element={<Profile/>}/>
 
               </Routes>
             </div>
           </main>
 
           <Footer />
+          <Chatbot />
         </div>
         
       </BrowserRouter>

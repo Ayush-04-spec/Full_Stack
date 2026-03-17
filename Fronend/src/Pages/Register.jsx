@@ -90,7 +90,7 @@ const Register = () => {
 
     try {
       await axios.post(
-        "http://localhost:8082/requestOtp",
+        "http://localhost:8082/user/requestOtp",
         formData,
         {
           headers: {

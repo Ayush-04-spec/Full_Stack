@@ -58,7 +58,7 @@ const MiniHeroNav = ({
           onClick={scrollToAchievements}
           className={`px-5 py-1.5 rounded-full text-sm font-medium text-white transition-all duration-300 ${getBgColor("achievements")}`}
         >
-          Achievements
+          Highlights
         </button>
 
         {/* CONTACT */}

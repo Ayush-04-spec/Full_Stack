@@ -23,7 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -76,30 +77,29 @@ public class UserController {
     public ResponseEntity<String> register(
             @RequestBody OtpDto dto
 
-    ) throws Exception {
-        Optional<Otp> userotp = otpService.getUser(dto.getEmail());
-        User user = new User();
+    ) {
+        try {
+            Optional<Otp> userotp = otpService.getUser(dto.getEmail());
+            User user = new User();
 
-        if(userotp.isEmpty()) throw new Exception("Otp not Generated");
-        boolean isValid = encoder.matches(dto.getOtp(), userotp.get().getOtp());
-        if(isValid) {
-            user.setName(userotp.get().getName());
-            user.setPassword(userotp.get().getPassword());
-            user.setEmail(userotp.get().getEmail());
-            user.setRole(RoleEnum.STUDENT);
-            user.setIsActive(true);
-
-
-           user.setImageUrl(userotp.get().getImageUrl()); //  ONLY place imageData is set
-            userService.adduser(user);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body("Correct");
-        }
-        else{
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("Incorrect otp");
+            if(userotp.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP not generated");
+            boolean isValid = encoder.matches(dto.getOtp(), userotp.get().getOtp());
+            if(isValid) {
+                user.setName(userotp.get().getName());
+                user.setPassword(userotp.get().getPassword());
+                user.setEmail(userotp.get().getEmail());
+                user.setRole(RoleEnum.STUDENT);
+                user.setIsActive(true);
+                user.setImageUrl(userotp.get().getImageUrl());
+                userService.adduser(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body("Correct");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect otp");
+            }
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already registered");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
