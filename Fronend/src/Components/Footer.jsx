@@ -1,72 +1,57 @@
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
-const Footer = () => {
-  return (
-    <footer className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400
-                  bg-[length:200%_200%] animate-gradient 
-                  text-white ">
+const Footer = () => (
+  <footer style={{ background: "var(--slate2)", borderTop: "1px solid var(--border)" }}>
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "64px 24px 40px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "48px" }}>
 
-      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-12">
-
-        {/* Company Info */}
-        <div>
-          <h2 className="text-2xl font-extrabold tracking-wide mb-4">
-            Ajinkya Infotech
-          </h2>
-
-          <p className="text-sm leading-relaxed text-orange-100">
-            A professional software training institute dedicated to building
-            strong technical foundations and industry-ready careers.
-          </p>
-
-          <p className="mt-4 text-sm text-orange-200">
-            Nashik, Maharashtra, India
-          </p>
-        </div>
-
-        {/* Contact Details */}
-        <div>
-          <h2 className="text-xl font-semibold mb-5">Get in Touch</h2>
-
-          <div className="space-y-4 text-sm">
-            <p className="flex items-center gap-3 text-orange-100 hover:text-white transition">
-              <FaPhoneAlt className="text-orange-200" />
-              <span>+91 82752 24127</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Map */}
-        <div>
-          <h2 className="text-xl font-semibold mb-5 flex items-center gap-2">
-            <FaMapMarkerAlt className="text-orange-200" />
-            Our Location
-          </h2>
-
-          <div className="overflow-hidden rounded-xl shadow-xl border border-orange-300/40">
-            <iframe
-              title="Ajinkya Infotech Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3748.852195055718!2d73.78607257527406!3d20.014717181392932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bddebb188bf4f2b%3A0x5bacd8fb9260328d!2sAjinkya%20Infotech!5e0!3m2!1sen!2sin!4v1768636204624!5m2!1sen!2sin"
-              className="w-full h-44 grayscale hover:grayscale-0 transition duration-300"
-              style={{ border: 0 }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>
-
+      <div>
+        <h3 className="serif" style={{ fontSize: "18px", color: "var(--warm-white)", marginBottom: "12px" }}>Ajinkya Infotech</h3>
+        <p style={{ fontSize: "13px", color: "var(--muted)", lineHeight: 1.75, maxWidth: "240px" }}>
+          A professional software training institute dedicated to building strong technical foundations.
+        </p>
+        <p className="mono" style={{ marginTop: "16px", fontSize: "10px" }}>Nashik, Maharashtra, India</p>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-orange-400/50 text-center py-5 text-sm text-orange-100">
-        © {new Date().getFullYear()}{" "}
-        <span className="font-semibold text-white">
-          Ajinkya Infotech
-        </span>
-        . All rights reserved.
+      <div>
+        <p className="mono" style={{ marginBottom: "20px" }}>Get in Touch</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <a href="tel:+918275224127" style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13px", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--terra)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}>
+            <FaPhoneAlt style={{ fontSize: "11px", flexShrink: 0 }} />
+            +91 82752 24127
+          </a>
+          <a href="https://wa.me/918275224127" target="_blank" rel="noopener noreferrer"
+            style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13px", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--terra)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}>
+            <span style={{ fontSize: "11px" }}>💬</span>
+            WhatsApp
+          </a>
+        </div>
       </div>
-    </footer>
-  );
-};
+
+      <div>
+        <p className="mono" style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+          <FaMapMarkerAlt style={{ fontSize: "10px" }} /> Location
+        </p>
+        <div style={{ borderRadius: "4px", overflow: "hidden", border: "1px solid var(--border)" }}>
+          <iframe
+            title="Ajinkya Infotech Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3748.852195055718!2d73.78607257527406!3d20.014717181392932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bddebb188bf4f2b%3A0x5bacd8fb9260328d!2sAjinkya%20Infotech!5e0!3m2!1sen!2sin!4v1768636204624!5m2!1sen!2sin"
+            style={{ width: "100%", height: "160px", border: 0, display: "block", filter: "grayscale(80%) brightness(0.6)" }}
+            loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div style={{ borderTop: "1px solid var(--border)", padding: "20px 24px", textAlign: "center" }}>
+      <p className="mono" style={{ fontSize: "10px" }}>
+        © {new Date().getFullYear()} Ajinkya Infotech — All rights reserved
+      </p>
+    </div>
+  </footer>
+);
 
 export default Footer;

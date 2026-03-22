@@ -1,66 +1,37 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ContactUs() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".contact-inner", { scrollTrigger: { trigger: ".contact-inner", start: "top 82%" }, y: 40, opacity: 0, duration: 0.9, ease: "power3.out" });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="w-full py-24 bg-gradient-to-b from-white to-orange-50">
-      <div className="max-w-5xl mx-auto px-6">
-
-        <motion.div
-          initial={{ y: 80, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true }}
-          className="
-            relative
-            bg-orange-400/25
-            backdrop-blur-2xl
-            rounded-[2.5rem]
-            p-12
-            border border-white/30
-            shadow-2xl shadow-orange-400/30
-            hover:-translate-y-2
-            transition-transform duration-500
-          "
-        >
-          {/* Glow Ring */}
-          <div className="absolute inset-0 rounded-[2.5rem] ring-2 ring-orange-400/20 pointer-events-none" />
-
-          {/* Content */}
-          <div className="relative text-center">
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">
-              Let’s Build Your IT Career
-            </h2>
-
-            <p className="text-gray-700 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Have questions about courses, batches, or placements?  
-              Reach out to Ajinkya Infotech and take your first confident step
-              toward a successful tech career.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap justify-center gap-5">
-              <a
-                href="https://wa.me/918275224127"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  px-8 py-4 rounded-full
-                  bg-white/80
-                  text-green-600 font-semibold
-                  backdrop-blur
-                  border border-white/40
-                  shadow-md
-                  hover:scale-105
-                  transition-transform
-                "
-              >
-                💬 WhatsApp
-              </a>
-            </div>
-          </div>
-        </motion.div>
+    <section ref={ref} style={{ background: "var(--slate)", padding: "120px 24px" }}>
+      <div className="contact-inner" style={{ maxWidth: "900px", margin: "0 auto", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "80px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "40px" }}>
+        <div>
+          <p className="mono" style={{ marginBottom: "16px" }}>Ready to start?</p>
+          <h2 className="serif" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "var(--warm-white)", lineHeight: 1.2 }}>
+            {"Let's build your"}<br />
+            <span style={{ fontStyle: "italic", color: "var(--terra)" }}>IT career together.</span>
+          </h2>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <a href="https://wa.me/918275224127" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: "none", textAlign: "center" }}>
+            💬 WhatsApp Us
+          </a>
+          <a href="tel:+918275224127" className="btn-outline" style={{ textDecoration: "none", textAlign: "center" }}>
+            +91 82752 24127
+          </a>
+        </div>
       </div>
     </section>
   );
 }
-    

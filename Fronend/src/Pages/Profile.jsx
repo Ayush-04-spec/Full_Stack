@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import { gsap } from "gsap";
 import ProfileCard from "../Components/dashboard/ProfileCard";
 import ProgressSection from "../Components/dashboard/ProgressSection";
 import UpcomingSection from "../Components/dashboard/UpcomingSection";
@@ -10,34 +12,67 @@ import NotificationsSection from "../Components/dashboard/NotificationsSection";
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const dashRef = useRef(null);
 
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!user) { navigate("/login"); return; }
+    const ctx = gsap.context(() => {
+      gsap.from(".dash-tile", {
+        y: 28,
+        opacity: 0,
+        stagger: 0.09,
+        duration: 0.7,
+        ease: "power3.out",
+        delay: 0.1,
+      });
+    }, dashRef);
+    return () => ctx.revert();
+  }, [user, navigate]);
+
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#fdf6ee]">
-      <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800">Student Dashboard</h1>
+    <div style={{ minHeight: "100vh", background: "var(--slate)", paddingTop: "96px", paddingBottom: "64px" }}>
+      <div ref={dashRef} style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
 
-        {/* Top row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <ProfileCard user={user} onLogout={() => { logout(); navigate("/login"); }} />
+        {/* Page header */}
+        <div className="dash-tile" style={{ marginBottom: "32px", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+          <div>
+            <p className="mono" style={{ fontSize: "10px", marginBottom: "6px" }}>student.dashboard</p>
+            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 4vw, 36px)", color: "var(--warm-white)", fontWeight: 600 }}>
+              Your <span style={{ color: "var(--terra)" }}>Dashboard</span>
+            </h1>
           </div>
-          <div className="lg:col-span-2 flex flex-col gap-6">
+          <div style={{
+            fontSize: "11px",
+            fontFamily: "'Courier New', monospace",
+            color: "var(--forest)",
+            padding: "5px 12px",
+            background: "var(--slate2)",
+            border: "1px solid var(--border)",
+            borderRadius: "3px",
+            letterSpacing: "0.05em",
+          }}>
+            ● active session
+          </div>
+        </div>
+
+        {/* Row 1 — Profile + Progress + Upcoming */}
+        <div className="dash-tile" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "20px", marginBottom: "20px", alignItems: "start" }}>
+          <ProfileCard user={user} onLogout={() => { logout(); navigate("/login"); }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <ProgressSection />
             <UpcomingSection />
           </div>
         </div>
 
-        {/* Bottom row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Row 2 — Performance + Certificates + Notifications */}
+        <div className="dash-tile" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
           <PerformanceSection />
           <CertificatesSection />
           <NotificationsSection />
         </div>
+
       </div>
     </div>
   );

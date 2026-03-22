@@ -1,4 +1,4 @@
-import { FaPlayCircle, FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaCircle } from "react-icons/fa";
 
 const modules = [
   { name: "Introduction to Computers", done: true },
@@ -10,37 +10,34 @@ const modules = [
   { name: "Python Programming", done: false },
 ];
 
-const completed = modules.filter((m) => m.done).length;
-const total = modules.length;
-const percent = Math.round((completed / total) * 100);
+const done = modules.filter((m) => m.done).length;
+const pct = Math.round((done / modules.length) * 100);
 
 const ProgressSection = () => (
-  <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5">
-    <div className="flex items-center justify-between mb-3">
-      <h3 className="font-semibold text-gray-800">Course Progress</h3>
-      <span className="text-orange-500 font-bold text-sm">{percent}%</span>
+  <div style={{ background: "var(--slate2)", border: "1px solid var(--border)", borderRadius: "4px", padding: "24px" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
+      <div>
+        <p className="mono" style={{ fontSize: "10px", marginBottom: "4px" }}>progress.track</p>
+        <h3 style={{ fontFamily: "var(--serif)", fontSize: "16px", color: "var(--warm-white)" }}>Course Progress</h3>
+      </div>
+      <span style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--terra)" }}>{pct}%</span>
     </div>
 
-    {/* Bar */}
-    <div className="w-full bg-orange-100 rounded-full h-3 mb-2">
-      <div
-        className="bg-orange-400 h-3 rounded-full transition-all duration-500"
-        style={{ width: `${percent}%` }}
-      />
+    <div className="progress-track" style={{ marginBottom: "6px" }}>
+      <div className="progress-fill" style={{ width: `${pct}%` }} />
     </div>
-    <p className="text-xs text-gray-500 mb-4">{completed} of {total} modules completed</p>
+    <p style={{ fontSize: "11px", color: "var(--muted)", fontFamily: "var(--sans)", marginBottom: "16px" }}>{done} of {modules.length} modules</p>
 
-    {/* Module list */}
-    <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "140px", overflowY: "auto" }}>
       {modules.map((m, i) => (
-        <div key={i} className="flex items-center gap-2 text-sm">
-          <FaCheckCircle className={m.done ? "text-orange-400" : "text-gray-200"} />
-          <span className={m.done ? "text-gray-700" : "text-gray-400"}>{m.name}</span>
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px" }}>
+          {m.done
+            ? <FaCheckCircle style={{ color: "var(--terra)", flexShrink: 0, fontSize: "11px" }} />
+            : <FaCircle style={{ color: "var(--slate4)", flexShrink: 0, fontSize: "11px" }} />}
+          <span style={{ color: m.done ? "var(--warm-grey)" : "var(--muted)" }}>{m.name}</span>
         </div>
       ))}
     </div>
-
-    
   </div>
 );
 

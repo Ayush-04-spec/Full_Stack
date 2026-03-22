@@ -1,47 +1,56 @@
 import { FaTrophy } from "react-icons/fa";
 
 const scores = [
-  { subject: "C Programming", score: 82, max: 100 },
-  { subject: "MS Office", score: 91, max: 100 },
-  { subject: "Networking", score: 74, max: 100 },
-  { subject: "MySQL", score: 68, max: 100 },
+  { subject: "C Programming", score: 82 },
+  { subject: "MS Office", score: 91 },
+  { subject: "Networking", score: 74 },
+  { subject: "MySQL", score: 68 },
 ];
 
 const getColor = (score) => {
-  if (score >= 80) return "bg-green-400";
-  if (score >= 60) return "bg-orange-400";
-  return "bg-red-400";
+  if (score >= 80) return "var(--terra)";
+  if (score >= 60) return "var(--forest)";
+  return "var(--muted)";
 };
 
+const avg = Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length);
+
 const PerformanceSection = () => (
-  <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5">
-    <div className="flex items-center gap-2 mb-4">
-      <FaTrophy className="text-orange-400" />
-      <h3 className="font-semibold text-gray-800">Performance</h3>
+  <div style={{ background: "var(--slate2)", border: "1px solid var(--border)", borderRadius: "4px", padding: "24px", height: "100%" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+      <FaTrophy style={{ color: "var(--terra)", fontSize: "13px", flexShrink: 0 }} />
+      <div>
+        <p className="mono" style={{ fontSize: "10px", marginBottom: "2px" }}>performance.scores</p>
+        <h3 style={{ fontFamily: "var(--serif)", fontSize: "16px", color: "var(--warm-white)" }}>Performance</h3>
+      </div>
     </div>
 
-    <div className="space-y-3">
-      {scores.map((s, i) => (
-        <div key={i}>
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>{s.subject}</span>
-            <span className="font-semibold">{s.score}/{s.max}</span>
+    <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+      {scores.map((s) => (
+        <div key={s.subject}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+            <span style={{ fontSize: "12px", color: "var(--warm-grey)", fontFamily: "var(--sans)" }}>{s.subject}</span>
+            <span style={{ fontSize: "12px", fontFamily: "'Courier New', monospace", color: getColor(s.score) }}>{s.score}%</span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-2">
-            <div
-              className={`${getColor(s.score)} h-2 rounded-full transition-all duration-500`}
-              style={{ width: `${s.score}%` }}
-            />
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${s.score}%`, background: getColor(s.score) }} />
           </div>
         </div>
       ))}
     </div>
 
-    <div className="mt-4 flex items-center justify-between text-sm">
-      <span className="text-gray-500">Overall Avg</span>
-      <span className="text-orange-500 font-bold">
-        {Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length)}%
-      </span>
+    <div style={{
+      marginTop: "20px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "10px 14px",
+      background: "var(--slate3)",
+      border: "1px solid var(--border)",
+      borderRadius: "3px",
+    }}>
+      <span className="mono" style={{ fontSize: "10px" }}>overall_avg</span>
+      <span style={{ fontFamily: "var(--serif)", fontSize: "22px", color: "var(--terra)" }}>{avg}%</span>
     </div>
   </div>
 );

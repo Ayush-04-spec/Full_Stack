@@ -1,127 +1,81 @@
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/* ---------- DATA (JSON) ---------- */
-const achievementsData = [
+gsap.registerPlugin(ScrollTrigger);
+
+const DATA = [
   {
-    subject: "Practical, Hands-On Learning",
-    content:
-      "We believe in learning by doing. Every module includes real coding exercises, mini projects, and assignments that mirror actual workplace tasks — not just theory.",
-    image:
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
+    tag: "01 — Methodology",
+    title: "Practical, Hands-On Learning",
+    body: "We believe in learning by doing. Every module includes real coding exercises, mini projects, and assignments that mirror actual workplace tasks — not just theory.",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
   },
   {
-    subject: "Small Batches, Personal Attention",
-    content:
-      "We keep our batch sizes small intentionally. Every student gets direct access to the trainer, personalized feedback, and the time they need to truly understand the material.",
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978"
+    tag: "02 — Approach",
+    title: "Small Batches, Personal Attention",
+    body: "We keep our batch sizes small intentionally. Every student gets direct access to the trainer, personalized feedback, and the time they need to truly understand the material.",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
   },
   {
-    subject: "Career-Focused Curriculum",
-    content:
-      "Our courses are built around what employers actually look for. From C and OOP fundamentals to Python and web development, every topic is chosen to make you job-ready from day one.",
-    image:
-      "https://images.unsplash.com/photo-1524178232363-1fb2b075b655"
-  }
+    tag: "03 — Outcomes",
+    title: "Career-Focused Curriculum",
+    body: "Our courses are built around what employers actually look for. From C and OOP fundamentals to Python and web development, every topic is chosen to make you job-ready from day one.",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",
+  },
 ];
 
-/* ---------- COMPONENT ---------- */
 export default function Achievements() {
-  const sectionRefs = useRef([]);
-  const [visibleItems, setVisibleItems] = useState([]);
+  const ref = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const index = Number(entry.target.dataset.index);
-          if (entry.isIntersecting) {
-            setVisibleItems((prev) =>
-              prev.includes(index) ? prev : [...prev, index]
-            );
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    sectionRefs.current.forEach((el) => el && observer.observe(el));
-
-    return () => observer.disconnect();
+    const ctx = gsap.context(() => {
+      gsap.from(".ach-head", { scrollTrigger: { trigger: ".ach-head", start: "top 82%" }, y: 40, opacity: 0, duration: 0.9, ease: "power3.out" });
+      DATA.forEach((_, i) => {
+        const rev = i % 2 !== 0;
+        gsap.from(`.ach-txt-${i}`, { scrollTrigger: { trigger: `.ach-row-${i}`, start: "top 78%" }, x: rev ? 50 : -50, opacity: 0, duration: 0.9, ease: "power3.out" });
+        gsap.from(`.ach-img-${i}`, { scrollTrigger: { trigger: `.ach-row-${i}`, start: "top 78%" }, x: rev ? -50 : 50, opacity: 0, duration: 0.9, ease: "power3.out", delay: 0.1 });
+      });
+    }, ref);
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section className="w-full py-20 bg-gray-50">
-      {/* Heading */}
-      <motion.div
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16"
-      >
-        <h2 className="text-4xl font-bold text-orange-600">
-          What Makes Us Stand Out
-        </h2>
-        <div className="w-24 h-1 bg-orange-500 mx-auto mt-4 rounded-full" />
-      </motion.div>
+    <section ref={ref} style={{ background: "var(--slate2)", padding: "120px 24px" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
-      {/* Achievement Blocks */}
-      <div className="max-w-6xl mx-auto px-6">
-        {achievementsData.map((item, index) => {
-          const reverse = index % 2 !== 0;
-          const isVisible = visibleItems.includes(index);
+        <div className="ach-head" style={{ marginBottom: "80px" }}>
+          <p className="mono" style={{ marginBottom: "16px" }}>What makes us different</p>
+          <h2 className="serif" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "var(--warm-white)" }}>
+            The <span style={{ fontStyle: "italic", color: "var(--terra)" }}>standard</span> we hold ourselves to
+          </h2>
+        </div>
 
-          return (
-            <div
-              key={index}
-              ref={(el) => (sectionRefs.current[index] = el)}
-              data-index={index}
-              className={`flex flex-col md:flex-row ${
-                reverse ? "md:flex-row-reverse" : ""
-              } items-center gap-10 mb-20`}
-            >
-              {/* Text */}
-              <motion.div
-                initial={{ x: reverse ? 60 : -60, opacity: 0 }}
-                animate={
-                  isVisible
-                    ? { x: 0, opacity: 1 }
-                    : { x: reverse ? 60 : -60, opacity: 0 }
-                }
-                transition={{ duration: 0.7, ease: "easeOut" }}
-                className="md:w-1/2"
-              >
-                <h3 className="text-2xl font-semibold text-orange-600 mb-4">
-                  {item.subject}
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  {item.content}
-                </p>
-              </motion.div>
-
-              {/* Image */}
-              <motion.div
-                initial={{ x: reverse ? -60 : 60, opacity: 0 }}
-                animate={
-                  isVisible
-                    ? { x: 0, opacity: 1 }
-                    : { x: reverse ? -60 : 60, opacity: 0 }
-                }
-                transition={{ duration: 0.7, ease: "easeOut" }}
-                className="md:w-1/2"
-              >
-                <div className="rounded-2xl overflow-hidden shadow-xl">
-                  <img
-                    src={item.image}
-                    alt={item.subject}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
-                  />
+        <div style={{ display: "flex", flexDirection: "column", gap: "96px" }}>
+          {DATA.map((item, i) => {
+            const rev = i % 2 !== 0;
+            return (
+              <div key={i} className={`ach-row-${i}`} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center", direction: rev ? "rtl" : "ltr" }}>
+                <div className={`ach-txt-${i}`} style={{ direction: "ltr" }}>
+                  <p className="mono" style={{ color: "var(--terra)", marginBottom: "16px" }}>{item.tag}</p>
+                  <h3 className="serif" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", color: "var(--warm-white)", marginBottom: "20px", lineHeight: 1.25 }}>{item.title}</h3>
+                  <p style={{ fontSize: "14px", color: "var(--muted)", lineHeight: 1.8 }}>{item.body}</p>
+                  <div style={{ width: "40px", height: "2px", background: "var(--terra)", marginTop: "28px" }} />
                 </div>
-              </motion.div>
-            </div>
-          );
-        })}
+                <div className={`ach-img-${i}`} style={{ direction: "ltr" }}>
+                  <div style={{ borderRadius: "4px", overflow: "hidden", border: "1px solid var(--border)", position: "relative" }}>
+                    <img src={item.image} alt={item.title}
+                      style={{ width: "100%", height: "300px", objectFit: "cover", display: "block", filter: "grayscale(50%) brightness(0.7)", transition: "filter 0.5s ease" }}
+                      onMouseEnter={(e) => (e.target.style.filter = "grayscale(20%) brightness(0.85)")}
+                      onMouseLeave={(e) => (e.target.style.filter = "grayscale(50%) brightness(0.7)")}
+                    />
+                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "var(--terra)" }} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

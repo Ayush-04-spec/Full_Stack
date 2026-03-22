@@ -5,23 +5,25 @@ import logo from "../assets/image.png";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [scrolled, setScrolled] = useState(false);
   const profileRef = useRef(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  // 🔹 Close profile dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const handleLogout = () => {
@@ -31,173 +33,109 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const NAV = [
+    { label: "Courses", path: "/courses" },
+    { label: "Blogs", path: "/blogs" },
+  ];
+
   return (
-    <nav
-      className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400
-                 bg-[length:200%_200%] animate-gradient
-                 shadow-lg px-6 py-3 fixed top-0 left-0 w-full z-51"
-    >
-      {/* TOP BAR */}
-      <div className="flex items-center justify-between">
-        {/* LOGO */}
-        <div
-          className="flex items-center cursor-pointer gap-2"
-          onClick={() => navigate("/")}
-        >
-          <img
-            src={logo}
-            alt="Logo"
-            className="h-12 w-auto object-contain drop-shadow-sm"
-          />
+    <nav style={{
+      position: "fixed", top: 0, left: 0, width: "100%", zIndex: 50,
+      transition: "background 0.4s ease, border-color 0.4s ease",
+      background: scrolled ? "rgba(26,28,30,0.88)" : "transparent",
+      backdropFilter: scrolled ? "blur(12px)" : "none",
+      borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
+    }}>
+      <div style={{
+        maxWidth: "1200px", margin: "0 auto", padding: "0 24px",
+        height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+
+        {/* Logo */}
+        <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
+          <img src={logo} alt="Ajinkya Infotech" style={{ height: "38px", width: "auto", objectFit: "contain" }} />
         </div>
 
-        {/* DESKTOP MENU */}
-        <div className="hidden md:flex items-center gap-10 font-medium">
-          <span
-            onClick={() => navigate("/courses")}
-            className="text-gray-800 hover:text-orange-700 cursor-pointer transition"
-          >
-            Courses
-          </span>
-
-          <span
-            onClick={() => navigate("/blogs")}
-            className="text-gray-800 hover:text-orange-700 cursor-pointer transition"
-          >
-            Blogs
-          </span>
-        </div>
-
-        {/* DESKTOP AUTH */}
-        <div className="hidden md:flex items-center">
-          {!token && (
-            <div
-              onClick={() => navigate("/login")}
-              className="bg-orange-600 text-white px-5 py-2 rounded-full
-                         cursor-pointer hover:bg-orange-700 transition shadow-md"
+        {/* Desktop center links */}
+        <div id="nav-links" style={{ display: "flex", alignItems: "center", gap: "36px" }}>
+          {NAV.map((l) => (
+            <button key={l.path} onClick={() => navigate(l.path)}
+              style={{ background: "none", border: "none", cursor: "pointer", fontSize: "13px", fontFamily: "var(--sans)", color: "var(--muted)", letterSpacing: "0.04em", transition: "color 0.2s" }}
+              onMouseEnter={(e) => (e.target.style.color = "var(--warm-white)")}
+              onMouseLeave={(e) => (e.target.style.color = "var(--muted)")}
             >
+              {l.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Desktop right — auth */}
+        <div id="nav-auth" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {!token ? (
+            <button className="btn-primary" onClick={() => navigate("/login")} style={{ padding: "8px 20px" }}>
               Login
-            </div>
-          )}
-
-          {token && (
-            <div className="relative" ref={profileRef}>
-              {/* Avatar */}
-              <div
-                onClick={() => setOpen(!open)}
-                className="w-10 h-10 rounded-full bg-orange-600 overflow-hidden
-                           cursor-pointer ring-2 ring-white shadow"
-              >
-                <img
-                  src={user.Image}
-                  alt="User"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Dropdown */}
+            </button>
+          ) : (
+            <div ref={profileRef} style={{ position: "relative" }}>
+              <button onClick={() => setOpen(!open)}
+                style={{ width: "36px", height: "36px", borderRadius: "50%", overflow: "hidden", border: "2px solid var(--border)", cursor: "pointer", padding: 0, background: "var(--slate3)" }}>
+                <img src={user.Image} alt="User" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </button>
               {open && (
-                <div
-                  className="absolute right-0 mt-3 w-44 bg-white shadow-xl
-                             rounded-lg border overflow-hidden"
-                >
-                  <div
-                    onClick={() => {
-                      navigate("/profile");
-                      setOpen(false);
-                    }}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition"
-                  >
-                    Profile
-                  </div>
-                  <div
-                    onClick={handleLogout}
-                    className="px-4 py-2 hover:bg-red-50 text-red-600
-                               cursor-pointer transition"
-                  >
-                    Logout
-                  </div>
+                <div style={{ position: "absolute", right: 0, top: "44px", width: "160px", background: "var(--slate2)", border: "1px solid var(--border)", borderRadius: "4px", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                  <button onClick={() => { navigate("/profile"); setOpen(false); }}
+                    style={{ width: "100%", textAlign: "left", padding: "10px 16px", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: "var(--warm-grey)", fontFamily: "var(--sans)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--slate3)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
+                  >Dashboard</button>
+                  <div style={{ height: "1px", background: "var(--border)" }} />
+                  <button onClick={handleLogout}
+                    style={{ width: "100%", textAlign: "left", padding: "10px 16px", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: "#c0392b", fontFamily: "var(--sans)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--slate3)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
+                  >Logout</button>
                 </div>
               )}
             </div>
           )}
         </div>
 
-        {/* HAMBURGER */}
-        <div
-          className="md:hidden text-3xl cursor-pointer text-gray-800"
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-            setOpen(false);
-          }}
-        >
-          ☰
-        </div>
+        {/* Hamburger — mobile only */}
+        <button id="nav-hamburger" onClick={() => setMenuOpen(!menuOpen)}
+          style={{ background: "none", border: "none", cursor: "pointer", display: "none", flexDirection: "column", gap: "5px", padding: "4px" }}>
+          {[0, 1, 2].map((i) => (
+            <span key={i} style={{
+              display: "block", width: "22px", height: "1.5px", background: "var(--warm-grey)", transition: "all 0.3s",
+              ...(menuOpen && i === 0 ? { transform: "rotate(45deg) translate(4.5px, 4.5px)" } : {}),
+              ...(menuOpen && i === 1 ? { opacity: 0 } : {}),
+              ...(menuOpen && i === 2 ? { transform: "rotate(-45deg) translate(4.5px, -4.5px)" } : {}),
+            }} />
+          ))}
+        </button>
       </div>
 
-      {/* MOBILE MENU */}
-      {menuOpen && (
-        <div
-          className="md:hidden mt-4 flex flex-col gap-4
-                     bg-amber-200/90 backdrop-blur
-                     p-5 rounded-xl shadow-lg"
-        >
-          <span
-            onClick={() => {
-              navigate("/courses");
-              setMenuOpen(false);
-            }}
-            className="text-gray-800 hover:text-orange-700 cursor-pointer transition"
-          >
-            Courses
-          </span>
-
-          <span
-            onClick={() => {
-              navigate("/blogs");
-              setMenuOpen(false);
-            }}
-            className="text-gray-800 hover:text-orange-700 cursor-pointer transition"
-          >
-            Blogs
-          </span>
-
-          {!token && (
-            <div
-              onClick={() => {
-                navigate("/login");
-                setMenuOpen(false);
-              }}
-              className="bg-orange-600 text-white px-5 py-2 rounded-full
-                         cursor-pointer hover:bg-orange-700 transition
-                         w-fit shadow"
-            >
-              Login
-            </div>
-          )}
-
-          {token && (
+      {/* Mobile menu */}
+      <div style={{ overflow: "hidden", maxHeight: menuOpen ? "300px" : "0", transition: "max-height 0.4s cubic-bezier(0.16,1,0.3,1)" }}>
+        <div style={{ background: "var(--slate2)", borderTop: "1px solid var(--border)", padding: "16px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          {NAV.map((l) => (
+            <button key={l.path} onClick={() => { navigate(l.path); setMenuOpen(false); }}
+              style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", fontSize: "14px", color: "var(--warm-grey)", fontFamily: "var(--sans)", padding: "4px 0" }}>
+              {l.label}
+            </button>
+          ))}
+          <div style={{ height: "1px", background: "var(--border)" }} />
+          {!token ? (
+            <button className="btn-primary" onClick={() => { navigate("/login"); setMenuOpen(false); }} style={{ width: "fit-content" }}>Login</button>
+          ) : (
             <>
-              <div
-                onClick={() => {
-                  navigate("/profile");
-                  setMenuOpen(false);
-                }}
-                className="px-4 py-2 bg-white rounded-lg cursor-pointer shadow-sm"
-              >
-                Profile
-              </div>
-              <div
-                onClick={handleLogout}
-                className="px-4 py-2 bg-white rounded-lg
-                           text-red-600 cursor-pointer shadow-sm"
-              >
-                Logout
-              </div>
+              <button onClick={() => { navigate("/profile"); setMenuOpen(false); }}
+                style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", fontSize: "14px", color: "var(--warm-grey)", fontFamily: "var(--sans)", padding: "4px 0" }}>Dashboard</button>
+              <button onClick={handleLogout}
+                style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", fontSize: "14px", color: "#c0392b", fontFamily: "var(--sans)", padding: "4px 0" }}>Logout</button>
             </>
           )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };

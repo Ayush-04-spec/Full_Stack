@@ -1,94 +1,109 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
 
-const slides = [
-  {
-    title: "Learn to Code. Build Your Future.",
-    desc: "Hands-on programming courses designed for beginners and job seekers.",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipN5qFrr1A5hItfNc3Wqs7G0k2TQC7C4ztxfD6sq=s1360-w1360-h1020-rw",
-  },
-  {
-    title: "From Zero to Developer",
-    desc: "Master C, OOP, Python and more with expert guidance at Ajinkya Infotech.",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipMguVdU0JhQYHgLXu_r1tIv5pHRPeF5Kj8y6DJO=s1360-w1360-h1020-rw",
-  },
-  {
-    title: "Real Skills. Real Projects.",
-    desc: "Every course includes practical assignments and real-world coding experience.",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipOpPLbrPC3ZVnJbwcFF9ceO1T6Kfigt8vhz6_xf=s1360-w1360-h1020-rw",
-  },
-];
+function Typewriter({ texts, speed = 70, pause = 2400 }) {
+  const [display, setDisplay] = useState("");
+  const [tIdx, setTIdx] = useState(0);
+  const [cIdx, setCIdx] = useState(0);
+  const [del, setDel] = useState(false);
 
-function Hero() {
-  const [current, setCurrent] = useState(0);
-
-  // Auto slide
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    const cur = texts[tIdx];
+    let t;
+    if (!del && cIdx < cur.length)       t = setTimeout(() => setCIdx(c => c + 1), speed);
+    else if (!del && cIdx === cur.length) t = setTimeout(() => setDel(true), pause);
+    else if (del && cIdx > 0)            t = setTimeout(() => setCIdx(c => c - 1), speed / 2);
+    else { setDel(false); setTIdx(i => (i + 1) % texts.length); }
+    setDisplay(cur.slice(0, cIdx));
+    return () => clearTimeout(t);
+  }, [cIdx, del, tIdx, texts, speed, pause]);
 
-    return () => clearInterval(interval);
+  return <span className="tw-cursor" style={{ color: "var(--terra)", fontStyle: "italic" }}>{display}</span>;
+}
+
+export default function Hero() {
+  const navigate = useNavigate();
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-label", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.1 });
+      gsap.from(".hero-h1",    { y: 50, opacity: 0, duration: 1,   ease: "power3.out", delay: 0.25 });
+      gsap.from(".hero-sub",   { y: 30, opacity: 0, duration: 0.9, ease: "power3.out", delay: 0.5 });
+      gsap.from(".hero-btns",  { y: 20, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.7 });
+      gsap.from(".hero-stats", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.9 });
+      gsap.from(".hero-photo", { x: 40, opacity: 0, duration: 1.1, ease: "power3.out", delay: 0.4 });
+    }, heroRef);
+    return () => ctx.revert();
   }, []);
 
+  const stats = [
+    { v: "500+", l: "Students" },
+    { v: "3",    l: "Courses"  },
+    { v: "95%",  l: "Placed"   },
+    { v: "5★",   l: "Rated"    },
+  ];
+
   return (
-    <>
-      {/* HERO CAROUSEL */}
-      <div className="relative w-full h-[600px] overflow-hidden">
-        {/* SLIDES */}
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === current ? "opacity-100 z-20" : "opacity-0 z-0"
-            }`}
-            style={{
-              backgroundImage: `url(${slide.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
-        ))}
+    <section ref={heroRef} style={{ minHeight: "100vh", background: "var(--slate)", display: "flex", alignItems: "center", position: "relative", overflow: "hidden" }}>
 
-        {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/30 z-30"></div>
+      <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", background: "var(--border)", opacity: 0.4 }} />
 
-        {/* CONTENT */}
-        <div className="relative z-40 flex h-full items-center justify-center text-center px-4">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {slides[current].title}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-200">
-              {slides[current].desc}
-            </p>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "80px 24px", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
+
+        {/* Left */}
+        <div>
+          <p className="hero-label mono" style={{ marginBottom: "24px" }}>
+            Nashik · Est. 2018 · Software Training
+          </p>
+
+          <h1 className="hero-h1 serif" style={{ fontSize: "clamp(2.8rem, 5vw, 4.2rem)", fontWeight: 600, lineHeight: 1.1, marginBottom: "28px", color: "var(--warm-white)" }}>
+            Where Logic<br />
+            Meets{" "}
+            <span style={{ fontStyle: "italic" }}>
+              <Typewriter texts={["Craft.", "Purpose.", "Career.", "Growth."]} />
+            </span>
+          </h1>
+
+          <p className="hero-sub" style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.75, maxWidth: "420px", marginBottom: "40px" }}>
+            Industry-focused programming courses with hands-on projects and expert mentors.
+            We turn beginners into job-ready developers.
+          </p>
+
+          <div className="hero-btns" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <button className="btn-primary" onClick={() => navigate("/courses")}>Explore Courses →</button>
+            <button className="btn-outline" onClick={() => navigate("/register")}>Get Started</button>
+          </div>
+
+          <div className="hero-stats" style={{ display: "flex", gap: "32px", marginTop: "56px", paddingTop: "32px", borderTop: "1px solid var(--border)" }}>
+            {stats.map((s) => (
+              <div key={s.l}>
+                <div style={{ fontFamily: "var(--serif)", fontSize: "22px", fontWeight: 600, color: "var(--warm-white)" }}>{s.v}</div>
+                <div className="mono" style={{ marginTop: "4px" }}>{s.l}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* LEFT ARROW */}
-        <button
-          onClick={() =>
-            setCurrent((prev) => (prev - 1 + slides.length) % slides.length)
-          }
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-50 bg-black/40 px-3 py-2 rounded-full text-white hover:bg-black/60"
-        >
-          ‹
-        </button>
+        {/* Right — photo only */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="hero-photo" style={{ width: "100%", maxWidth: "480px", aspectRatio: "4/5", borderRadius: "4px 40px 4px 4px", overflow: "hidden", border: "1px solid var(--border)", position: "relative" }}>
+            <img
+              src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=900&q=80"
+              alt="Developer workspace"
+              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(60%) brightness(0.65)" }}
+            />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "var(--terra)" }} />
+            <div style={{ position: "absolute", bottom: "16px", left: "16px" }}>
+              <p className="mono" style={{ color: "rgba(240,237,232,0.5)", fontSize: "10px" }}>Real skills. Real projects.</p>
+            </div>
+          </div>
+        </div>
 
-        {/* RIGHT ARROW */}
-        <button
-          onClick={() =>
-            setCurrent((prev) => (prev + 1) % slides.length)
-          }
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-50 bg-black/40 px-3 py-2 rounded-full text-white hover:bg-black/60"
-        >
-          ›
-        </button>
       </div>
-    </>
+
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", background: "linear-gradient(to bottom, transparent, var(--slate))", pointerEvents: "none" }} />
+    </section>
   );
 }
-
-export default Hero;

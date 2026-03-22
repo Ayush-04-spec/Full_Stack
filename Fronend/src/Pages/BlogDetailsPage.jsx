@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaArrowLeft, FaCalendarAlt } from "react-icons/fa";
+import { gsap } from "gsap";
 import axios from "axios";
-import { motion } from "framer-motion";
 
 const BlogDetails = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const ref = useRef(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -22,89 +25,77 @@ const BlogDetails = () => {
     fetchBlog();
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-orange-600 text-lg">
-        Loading blog...
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!loading && blog && ref.current) {
+      gsap.set(ref.current, { opacity: 1 });
+      gsap.from(ref.current, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out", clearProps: "opacity,transform" });
+    }
+  }, [loading, blog]);
 
-  if (!blog) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Blog not found 😕
-      </div>
-    );
-  }
+  if (loading) return (
+    <div style={{ minHeight: "100vh", background: "#1A1C1E", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <p style={{ fontFamily: "'Courier New', monospace", fontSize: "11px", color: "#8A8A8A", letterSpacing: "0.1em", textTransform: "uppercase" }}>Loading...</p>
+    </div>
+  );
+
+  if (!blog) return (
+    <div style={{ minHeight: "100vh", background: "#1A1C1E", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <p style={{ fontFamily: "'Courier New', monospace", fontSize: "11px", color: "#8A8A8A" }}>Blog not found.</p>
+    </div>
+  );
 
   return (
-    <section className="min-h-screen pt-28 pb-24 bg-gradient-to-b from-orange-50 via-white to-orange-50">
-      <div className="max-w-5xl mx-auto px-6">
+    <div style={{ minHeight: "100vh", background: "#1A1C1E" }}>
+      <div style={{ maxWidth: "760px", margin: "0 auto", padding: "100px 24px 80px" }}>
 
-        {/* HEADER */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+        {/* Back */}
+        <button
+          onClick={() => navigate("/blogs")}
+          style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", color: "#8A8A8A", fontSize: "13px", fontFamily: "'Inter', sans-serif", marginBottom: "40px", padding: 0 }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#E07A5F")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A8A")}
         >
-          <h1 className="text-4xl md:text-5xl font-extrabold text-orange-600 leading-tight">
+          <FaArrowLeft style={{ fontSize: "11px" }} /> Back to Blogs
+        </button>
+
+        <div ref={ref} style={{ opacity: 1 }}>
+          {/* Cover image */}
+          {blog.coverImage && (
+            <div style={{ width: "100%", height: "280px", overflow: "hidden", borderRadius: "4px", marginBottom: "32px", border: "1px solid #2E3032" }}>
+              <img
+                src={blog.coverImage}
+                alt={blog.title}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(30%) brightness(0.7)" }}
+              />
+            </div>
+          )}
+
+          {/* Date */}
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "14px" }}>
+            <FaCalendarAlt style={{ color: "#E07A5F", fontSize: "10px" }} />
+            <p style={{ fontFamily: "'Courier New', monospace", fontSize: "10px", color: "#8A8A8A", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              {new Date(blog.createdAt).toDateString()}
+            </p>
+          </div>
+
+          {/* Title */}
+          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#F0EDE8", lineHeight: 1.2, fontWeight: 600, marginBottom: "8px" }}>
             {blog.title}
           </h1>
 
-          <p className="mt-4 text-sm text-gray-500">
-            {new Date(blog.createdAt).toDateString()}
-          </p>
-        </motion.div>
+          {/* Terracotta rule */}
+          <div style={{ width: "40px", height: "2px", background: "#E07A5F", margin: "20px 0 32px", borderRadius: "1px" }} />
 
-        {/* COVER IMAGE */}
-        {blog.coverImage && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16 rounded-3xl overflow-hidden shadow-2xl"
-          >
-            <img
-              src={blog.coverImage}
-              alt={blog.title}
-              className="w-full h-[420px] object-cover hover:scale-105 transition-transform duration-700"
-            />
-          </motion.div>
-        )}
-
-        {/* CONTENT CARD */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="
-            bg-white
-            rounded-3xl
-            shadow-xl
-            border border-orange-100
-            px-8 md:px-14
-            py-10 md:py-14
-          "
-        >
-          <article className="
-            prose
-            prose-lg
-            prose-orange
-            max-w-none
-            prose-headings:font-bold
-            prose-headings:text-orange-600
-            prose-p:text-gray-700
-            prose-li:text-gray-700
-            prose-strong:text-gray-900
-          ">
-            {blog.content}
-          </article>
-        </motion.div>
+          {/* Body card */}
+          <div style={{ background: "#222426", border: "1px solid #2E3032", borderRadius: "4px", padding: "36px 40px" }}>
+            <p style={{ fontSize: "15px", color: "#D1D1D1", lineHeight: 1.9, fontFamily: "'Inter', sans-serif", whiteSpace: "pre-wrap", margin: 0 }}>
+              {blog.content}
+            </p>
+          </div>
+        </div>
 
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -1,56 +1,65 @@
 import { FaBell } from "react-icons/fa";
 
 const notifications = [
-  {
-    title: "New module unlocked: Python Basics",
-    time: "2 hours ago",
-    unread: true,
-  },
-  {
-    title: "Exam schedule updated for March",
-    time: "Yesterday",
-    unread: true,
-  },
-  {
-    title: "Your C Programming certificate is ready",
-    time: "2 days ago",
-    unread: false,
-  },
-  {
-    title: "Holiday notice: March 25 – No classes",
-    time: "3 days ago",
-    unread: false,
-  },
+  { title: "New module unlocked: Python Basics", time: "2 hours ago", unread: true },
+  { title: "Exam schedule updated for March", time: "Yesterday", unread: true },
+  { title: "Your C Programming certificate is ready", time: "2 days ago", unread: false },
+  { title: "Holiday notice: March 25 – No classes", time: "3 days ago", unread: false },
 ];
 
+const unreadCount = notifications.filter((n) => n.unread).length;
+
 const NotificationsSection = () => (
-  <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5">
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-2">
-        <FaBell className="text-orange-400" />
-        <h3 className="font-semibold text-gray-800">Notifications</h3>
+  <div style={{ background: "var(--slate2)", border: "1px solid var(--border)", borderRadius: "4px", padding: "24px", height: "100%" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <FaBell style={{ color: "var(--terra)", fontSize: "13px", flexShrink: 0 }} />
+        <div>
+          <p className="mono" style={{ fontSize: "10px", marginBottom: "2px" }}>notifications.feed</p>
+          <h3 style={{ fontFamily: "var(--serif)", fontSize: "16px", color: "var(--warm-white)" }}>Notifications</h3>
+        </div>
       </div>
-      <span className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full">
-        {notifications.filter((n) => n.unread).length} new
-      </span>
+      {unreadCount > 0 && (
+        <span style={{
+          fontSize: "10px",
+          fontFamily: "'Courier New', monospace",
+          padding: "3px 8px",
+          background: "var(--slate3)",
+          border: "1px solid var(--terra)",
+          borderRadius: "2px",
+          color: "var(--terra)",
+          letterSpacing: "0.05em",
+        }}>
+          {unreadCount} new
+        </span>
+      )}
     </div>
 
-    <div className="space-y-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {notifications.map((n, i) => (
         <div
           key={i}
-          className={`flex gap-3 p-2.5 rounded-xl text-sm ${
-            n.unread ? "bg-orange-50" : ""
-          }`}
+          style={{
+            display: "flex",
+            gap: "10px",
+            padding: "10px 12px",
+            background: n.unread ? "var(--slate3)" : "transparent",
+            border: `1px solid ${n.unread ? "var(--border)" : "transparent"}`,
+            borderRadius: "3px",
+          }}
         >
-          <div
-            className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-              n.unread ? "bg-orange-400" : "bg-gray-200"
-            }`}
-          />
+          <div style={{ marginTop: "5px", flexShrink: 0 }}>
+            {n.unread
+              ? <div className="dot-terra" />
+              : <div className="dot-muted" />}
+          </div>
           <div>
-            <p className="text-gray-700 leading-snug">{n.title}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
+            <p style={{ fontSize: "12px", color: n.unread ? "var(--warm-grey)" : "var(--muted)", fontFamily: "var(--sans)", lineHeight: 1.4 }}>
+              {n.title}
+            </p>
+            <p style={{ fontSize: "10px", color: "var(--muted)", fontFamily: "'Courier New', monospace", marginTop: "3px" }}>
+              {n.time}
+            </p>
           </div>
         </div>
       ))}

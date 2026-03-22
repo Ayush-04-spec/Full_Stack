@@ -7,31 +7,51 @@ const certs = [
 ];
 
 const CertificatesSection = () => (
-  <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5">
-    <div className="flex items-center gap-2 mb-4">
-      <FaCertificate className="text-orange-400" />
-      <h3 className="font-semibold text-gray-800">Certificates</h3>
+  <div style={{ background: "var(--slate2)", border: "1px solid var(--border)", borderRadius: "4px", padding: "24px", height: "100%" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+      <FaCertificate style={{ color: "var(--terra)", fontSize: "13px", flexShrink: 0 }} />
+      <div>
+        <p className="mono" style={{ fontSize: "10px", marginBottom: "2px" }}>certificates.earned</p>
+        <h3 style={{ fontFamily: "var(--serif)", fontSize: "16px", color: "var(--warm-white)" }}>Certificates</h3>
+      </div>
     </div>
 
-    <div className="space-y-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {certs.map((c, i) => (
-        <div key={i} className="flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-sm text-gray-700 truncate">{c.name}</p>
-            <span
-              className={`text-xs font-medium ${
-                c.status === "completed" ? "text-green-500" : "text-orange-400"
-              }`}
-            >
-              {c.status === "completed" ? "✓ Completed" : "⏳ In Progress"}
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
+            padding: "12px 14px",
+            background: "var(--slate3)",
+            border: "1px solid var(--border)",
+            borderRadius: "3px",
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <p style={{ fontSize: "12px", color: "var(--warm-grey)", fontFamily: "var(--sans)", marginBottom: "3px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {c.name}
+            </p>
+            <span style={{
+              fontSize: "10px",
+              fontFamily: "'Courier New', monospace",
+              color: c.status === "completed" ? "var(--forest)" : "var(--muted)",
+              letterSpacing: "0.05em",
+            }}>
+              {c.status === "completed" ? "✓ completed" : "⏳ in_progress"}
             </span>
           </div>
+
           {c.status === "completed" ? (
-            <button className="shrink-0 flex items-center gap-1 text-xs bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-full transition">
-              <FaDownload className="text-xs" /> Download
+            <button className="btn-primary" style={{ padding: "6px 12px", display: "flex", alignItems: "center", gap: "5px", flexShrink: 0 }}>
+              <FaDownload style={{ fontSize: "10px" }} />
+              <span style={{ fontSize: "11px" }}>Download</span>
             </button>
           ) : (
-            <FaSpinner className="text-orange-300 animate-spin shrink-0" />
+            <FaSpinner style={{ color: "var(--muted)", animation: "spin 1s linear infinite", flexShrink: 0 }} />
           )}
         </div>
       ))}
